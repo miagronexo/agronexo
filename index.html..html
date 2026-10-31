@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgroCalculadora</title>
+<style>
+:root {
+  --site-primary: #246b4b;
+  --site-on-primary: #ffffff;
+  --site-secondary: #e2eee5;
+  --site-on-secondary: #183d2d;
+  --site-background: #f4f7f3;
+  --site-on-background: #1d2b23;
+  --site-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-font-heading: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+  --surface: light-dark(#ffffff, #18221c);
+  --surface-soft: light-dark(#f0f5f0, #202d24);
+  --text: light-dark(#1d2b23, #edf5ee);
+  --muted: light-dark(#68776d, #a8b8ab);
+  --border: light-dark(#dce6dd, #35453a);
+  --accent: #d8a84e;
+  --good: #28784f;
+  --warning: #a45b18;
+  color-scheme: light dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--site-font-body); background: var(--site-background); color: var(--site-on-background); }
+button, input, select { font: inherit; }
+#app { min-height: 100vh; width: 100%; border-radius: 0; background-color: var(--site-background); color: var(--site-on-background); }
+.topbar { background: var(--site-primary); color: var(--site-on-primary); padding: calc(22px * var(--site-spacing-scale)) max(22px, calc((100vw - 1160px)/2)); position: relative; overflow: hidden; }
+.topbar:after { content:""; position:absolute; width:300px; height:300px; border:1px solid rgba(255,255,255,.14); border-radius:50%; right:7%; top:-190px; box-shadow:0 0 0 34px rgba(255,255,255,.035),0 0 0 70px rgba(255,255,255,.025); opacity:var(--site-decoration-opacity); pointer-events:none; }
+.brand { display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:.02em; }
+.brand-mark { width:42px; height:42px; border-radius:14px; background:rgba(255,255,255,.15); display:grid; place-items:center; font-size:23px; }
+.topbar h1 { font-family:var(--site-font-heading); font-size:calc( clamp(28px, 4vw, 43px) * var(--site-heading-scale)); line-height:1.08; margin:27px 0 9px; max-width:700px; }
+.topbar p { color:rgba(255,255,255,.82); margin:0; max-width:680px; line-height:1.55; }
+.wrap { max-width:1160px; margin:auto; padding:26px 22px 54px; }
+.nav { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px; }
+.nav button { border:1px solid var(--border); background:var(--surface); color:var(--text); border-radius:999px; padding:10px 15px; cursor:pointer; font-weight:650; font-size:13px; }
+.nav button.active { background:var(--site-primary); color:var(--site-on-primary); border-color:var(--site-primary); }
+.section-head { display:flex; justify-content:space-between; align-items:end; gap:16px; margin-bottom:18px; }
+.eyebrow { color:var(--good); font-weight:800; font-size:11px; letter-spacing:.12em; text-transform:uppercase; }
+h2 { font-family:var(--site-font-heading); font-size:calc(25px * var(--site-heading-scale)); margin:5px 0 5px; }
+.sub { color:var(--muted); margin:0; line-height:1.5; font-size:14px; }
+.grid { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:16px; }
+.card { background:var(--surface); border:1px solid var(--border); border-radius:calc(18px * var(--site-radius-scale)); padding:20px; box-shadow:0 5px 18px rgba(30,55,35,.035); }
+.span-8 { grid-column:span 8; } .span-4 { grid-column:span 4; } .span-6 { grid-column:span 6; } .span-12 { grid-column:span 12; }
+.card h3 { margin:0 0 5px; font-size:17px; }
+.card-intro { color:var(--muted); font-size:13px; margin:0 0 18px; line-height:1.45; }
+.fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px; }
+.field { display:flex; flex-direction:column; gap:6px; }
+.field.full { grid-column:1/-1; }
+label { font-size:12px; font-weight:750; color:var(--text); }
+input, select { width:100%; min-width:0; border:1px solid var(--border); background:var(--surface); color:var(--text); border-radius:10px; padding:11px 12px; outline:none; }
+input:focus, select:focus { border-color:var(--site-primary); box-shadow:0 0 0 3px color-mix(in srgb, var(--site-primary) 14%, transparent); }
+.hint { color:var(--muted); font-size:11px; line-height:1.4; }
+.primary { background:var(--site-primary); color:white; border:0; border-radius:11px; padding:12px 16px; font-weight:750; cursor:pointer; }
+.secondary { background:var(--surface-soft); color:var(--text); border:1px solid var(--border); border-radius:11px; padding:11px 14px; font-weight:700; cursor:pointer; }
+.actions { display:flex; gap:9px; flex-wrap:wrap; margin-top:16px; }
+.results { display:grid; gap:10px; }
+.metric { background:var(--surface-soft); border-radius:13px; padding:14px; }
+.metric small { display:block; color:var(--muted); font-size:11px; font-weight:700; margin-bottom:5px; }
+.metric strong { font-size:23px; letter-spacing:-.03em; }
+.metric span { color:var(--muted); font-size:12px; margin-left:4px; }
+.result-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+.note { border-left:3px solid var(--accent); background:color-mix(in srgb, var(--accent) 10%, var(--surface)); padding:12px 14px; border-radius:0 10px 10px 0; color:var(--muted); font-size:12px; line-height:1.5; margin-top:14px; }
+.notice { border:1px solid #e5c994; background:light-dark(#fff8e9,#352b1c); color:light-dark(#684617,#f2d7a7); padding:13px 15px; border-radius:12px; font-size:12px; line-height:1.5; }
+.hidden { display:none !important; }
+.table-wrap { overflow:auto; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th,td { padding:10px 9px; border-bottom:1px solid var(--border); text-align:left; white-space:nowrap; }
+th { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.05em; }
+td input { min-width:85px; padding:8px; }
+.pill { display:inline-block; background:var(--site-secondary); color:var(--site-on-secondary); border-radius:999px; padding:5px 9px; font-size:11px; font-weight:750; }
+.home-cards { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:13px; }
+.home-tile { text-align:left; background:var(--surface); color:var(--text); border:1px solid var(--border); padding:17px; border-radius:15px; cursor:pointer; min-height:125px; }
+.home-tile b { display:block; margin:10px 0 4px; }
+.home-tile small { color:var(--muted); line-height:1.4; }
+.tile-icon { font-size:24px; }
+footer { color:var(--muted); font-size:11px; text-align:center; margin-top:30px; line-height:1.5; }
+@media(max-width:800px){.span-8,.span-4,.span-6{grid-column:span 12}.home-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar{padding:22px}.wrap{padding:20px 14px 40px}}
+@media(max-width:430px){.fields{grid-template-columns:1fr}.result-grid{grid-template-columns:1fr 1fr}.card{padding:16px}.nav button{padding:9px 12px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">🌱</div><div>AGROCALCULADORA <span style="font-weight:500;opacity:.72">· BETA</span></div></div>
+    <h1>Decisiones agronómicas, con datos.</h1>
+    <p>Calcula, organiza y analiza información de tus cultivos en un solo lugar. Una caja de herramientas práctica para el trabajo de campo y los ensayos.</p>
+  </header>
+  <main class="wrap">
+    <nav class="nav" aria-label="Secciones">
+      <button class="active" data-tab="inicio">⌂ Inicio</button>
+      <button data-tab="agro">⚗ Agroquímicos</button>
+      <button data-tab="fert">🌿 Fertilización</button>
+      <button data-tab="siembra">↗ Siembra</button>
+      <button data-tab="ensayo">▦ Ensayos</button>
+      <button data-tab="sanidad">🪲 Sanidad vegetal</button>
+      <button data-tab="costos">$ Costos</button>
+    </nav>
+
+    <section id="inicio" class="panel">
+      <div class="section-head"><div><div class="eyebrow">Panel principal</div><h2>Bienvenida a tu espacio agronómico</h2><p class="sub">Selecciona una herramienta para comenzar. Los cálculos se actualizan con los datos que ingreses.</p></div><span class="pill">Versión inicial 1.0</span></div>
+      <div class="home-cards">
+        <button class="home-tile" data-go="agro"><span class="tile-icon">⚗️</span><b>Agroquímicos</b><small>Dosis de etiqueta, hectáreas, mezcla y número de tanques.</small></button>
+        <button class="home-tile" data-go="fert"><span class="tile-icon">🌿</span><b>Fertilización</b><small>Conversión de requerimientos nutricionales a fertilizante comercial.</small></button>
+        <button class="home-tile" data-go="siembra"><span class="tile-icon">🌱</span><b>Siembra</b><small>Población de plantas y densidad por hectárea.</small></button>
+        <button class="home-tile" data-go="ensayo"><span class="tile-icon">🧪</span><b>Ensayos</b><small>Registra tratamientos, repeticiones y calcula promedios.</small></button>
+        <button class="home-tile" data-go="sanidad"><span class="tile-icon">🔎</span><b>Sanidad vegetal</b><small>Consulta plagas y enfermedades frecuentes y carga fotografías para documentar síntomas.</small></button>
+      </div>
+      <div class="grid" style="margin-top:16px">
+        <div class="card span-8"><h3>¿Qué incluye esta versión?</h3><p class="card-intro">Una primera versión funcional para probar cálculos frecuentes en agronomía.</p><div class="results"><div>✓ Calculadora de dosis por área y tanque.</div><div>✓ Calculadora de fertilizante según concentración nutricional.</div><div>✓ Densidad de siembra con distancias entre surcos y plantas.</div><div>✓ Registro básico de datos de ensayos y promedios por tratamiento.</div><div>✓ Estimación sencilla de costos por hectárea.</div></div></div>
+        <div class="card span-4"><h3>Antes de usar</h3><p class="card-intro">Esta herramienta apoya cálculos; no reemplaza el criterio profesional ni la validación técnica.</p><div class="notice">Para plaguicidas, ingresa únicamente dosis verificadas en la etiqueta y autorizadas para el cultivo y uso correspondiente en Colombia. Respeta restricciones, EPP, intervalos de reingreso y carencia.</div></div>
+      </div>
+    </section>
+
+    <section id="agro" class="panel hidden">
+      <div class="section-head"><div><div class="eyebrow">Módulo 01</div><h2>Calculadora de agroquímicos</h2><p class="sub">Convierte una dosis de etiqueta a la cantidad necesaria para el área y el equipo de aplicación.</p></div><span class="pill">Cálculo por área</span></div>
+      <div class="grid">
+        <div class="card span-8"><h3>Datos de aplicación</h3><p class="card-intro">La dosis debe provenir de la etiqueta aprobada. Esta calculadora no recomienda productos ni dosis.</p>
+          <div class="fields">
+            <div class="field"><label for="cropAgro">Cultivo</label><select id="cropAgro"><option>Tomate</option><option>Arroz</option><option>Café</option><option>Maíz</option><option>Fríjol</option><option>Fresa</option><option>Plátano</option><option>Otro cultivo</option></select></div>
+            <div class="field"><label for="kindAgro">Tipo de producto</label><select id="kindAgro"><option>Insecticida</option><option>Fungicida</option><option>Herbicida</option><option>Otro</option></select></div>
+            <div class="field"><label for="doseAgro">Dosis indicada en etiqueta</label><input id="doseAgro" type="number" min="0" step="any" value="1"></div>
+            <div class="field"><label for="unitAgro">Unidad de dosis</label><select id="unitAgro"><option value="L">L/ha</option><option value="mL">mL/ha</option><option value="kg">kg/ha</option><option value="g">g/ha</option></select></div>
+            <div class="field"><label for="areaAgro">Área a tratar (ha)</label><input id="areaAgro" type="number" min="0" step="any" value="3"></div>
+            <div class="field"><label for="waterAgro">Volumen de aplicación (L/ha)</label><input id="waterAgro" type="number" min="0" step="any" value="200"></div>
+            <div class="field"><label for="tankAgro">Capacidad del tanque (L)</label><input id="tankAgro" type="number" min="0" step="any" value="20"></div>
+          </div>
+          <div class="actions"><button class="primary" id="calcAgro">Calcular cantidades</button><button class="secondary" id="resetAgro">Restablecer</button></div>
+          <div class="note">Supone que la dosis está expresada por hectárea y que el volumen de aplicación corresponde al mismo cultivo, estado y método de aplicación. Verifica calibración y compatibilidad antes de preparar una mezcla.</div>
+        </div>
+        <div class="card span-4"><h3>Resultado del cálculo</h3><p class="card-intro">Cantidades estimadas para los datos ingresados.</p><div class="results"><div class="metric"><small>Producto total</small><strong id="agroTotal">3.00</strong><span id="agroUnit">L</span></div><div class="metric"><small>Agua total</small><strong id="agroWater">600</strong><span>L</span></div><div class="result-grid"><div class="metric"><small>N.º de tanques</small><strong id="agroTanks">30</strong></div><div class="metric"><small>Producto / tanque</small><strong id="agroPerTank">100</strong><span id="agroPerUnit">mL</span></div></div></div><div id="agroError" class="hint" style="color:#bd5b36;margin-top:10px" aria-live="polite"></div></div>
+        <div class="span-12 notice">Seguridad: no mezcles productos por el solo hecho de que la calculadora permita sumar cantidades. Consulta etiqueta, compatibilidad, orden de mezcla, restricciones del ICA y asesoría técnica. No excedas dosis ni número de aplicaciones autorizadas.</div>
+      </div>
+    </section>
+
+    <section id="fert" class="panel hidden">
+      <div class="section-head"><div><div class="eyebrow">Módulo 02</div><h2>Calculadora de fertilización</h2><p class="sub">Calcula cuánto fertilizante comercial aporta una cantidad objetivo de nutriente.</p></div><span class="pill">N · P₂O₅ · K₂O</span></div>
+      <div class="grid">
+        <div class="card span-8"><h3>Requerimiento y fuente</h3><p class="card-intro">Ingresa el requerimiento definido mediante análisis de suelo, recomendación técnica o plan de fertilización.</p><div class="fields">
+          <div class="field"><label for="cropFert">Cultivo</label><select id="cropFert"><option>Maíz</option><option>Arroz</option><option>Tomate</option><option>Café</option><option>Fríjol</option><option>Otro cultivo</option></select></div>
+          <div class="field"><label for="nutrient">Nutriente objetivo</label><select id="nutrient"><option>Nitrógeno (N)</option><option>Fósforo (P₂O₅)</option><option>Potasio (K₂O)</option></select></div>
+          <div class="field"><label for="needFert">Requerimiento (kg de nutriente/ha)</label><input id="needFert" type="number" min="0" step="any" value="100"></div>
+          <div class="field"><label for="gradeFert">Concentración en fertilizante (%)</label><input id="gradeFert" type="number" min="0.01" max="100" step="any" value="46"></div>
+          <div class="field"><label for="areaFert">Área (ha)</label><input id="areaFert" type="number" min="0" step="any" value="2"></div>
+        </div><div class="actions"><button class="primary" id="calcFert">Calcular fertilizante</button></div><div class="note">El cálculo considera un solo nutriente y una fuente con concentración conocida. No descuenta aportes del suelo, eficiencia de recuperación, pérdidas ni interacciones entre nutrientes.</div></div>
+        <div class="card span-4"><h3>Resultado</h3><p class="card-intro">Cantidad teórica de fertilizante comercial.</p><div class="metric"><small>Fertilizante necesario</small><strong id="fertHa">217.39</strong><span>kg/ha</span></div><div class="metric" style="margin-top:9px"><small>Total para el área</small><strong id="fertTotal">434.78</strong><span>kg</span></div><p id="fertError" class="hint" style="color:#bd5b36;margin-top:10px"></p></div>
+      </div>
+    </section>
+
+    <section id="siembra" class="panel hidden">
+      <div class="section-head"><div><div class="eyebrow">Módulo 03</div><h2>Densidad de siembra</h2><p class="sub">Estima población teórica de plantas a partir del arreglo espacial.</p></div><span class="pill">Plantas por hectárea</span></div>
+      <div class="grid"><div class="card span-8"><h3>Distancias de establecimiento</h3><p class="card-intro">Para un arreglo rectangular o en surcos. Ajusta los valores a tu sistema de siembra.</p><div class="fields">
+        <div class="field"><label for="rowDist">Distancia entre surcos (m)</label><input id="rowDist" type="number" min="0" step="any" value="1"></div>
+        <div class="field"><label for="plantDist">Distancia entre plantas (m)</label><input id="plantDist" type="number" min="0" step="any" value="0.5"></div>
+        <div class="field"><label for="rows">Plantas por sitio (opcional)</label><input id="rows" type="number" min="1" step="1" value="1"></div>
+        <div class="field"><label for="areaPlant">Área (ha)</label><input id="areaPlant" type="number" min="0" step="any" value="1"></div>
+      </div><div class="actions"><button class="primary" id="calcPlant">Calcular población</button></div><div class="note">Es una estimación teórica para distribución rectangular. No incluye bordes, caminos, resiembras, germinación ni mortalidad. Para tres bolillos y otros arreglos se debe utilizar una fórmula específica.</div></div>
+      <div class="card span-4"><h3>Resultado</h3><div class="metric"><small>Densidad estimada</small><strong id="density">20,000</strong><span>plantas/ha</span></div><div class="metric" style="margin-top:9px"><small>Población en el área</small><strong id="population">20,000</strong><span>plantas</span></div><p id="plantError" class="hint" style="color:#bd5b36;margin-top:10px"></p></div></div>
+    </section>
+
+    <section id="ensayo" class="panel hidden">
+      <div class="section-head"><div><div class="eyebrow">Módulo 04</div><h2>Registro de ensayos</h2><p class="sub">Registra observaciones por tratamiento y repetición y compara sus promedios.</p></div><span class="pill">Datos de ejemplo editables</span></div>
+      <div class="grid"><div class="card span-12"><h3>Datos del ensayo</h3><p class="card-intro">Ejemplo: altura de plantas (cm). Puedes cambiar los valores o agregar registros.</p><div class="fields" style="margin-bottom:15px"><div class="field"><label for="trialCrop">Cultivo</label><select id="trialCrop"><option>Maíz</option><option>Tomate</option><option>Fríjol</option><option>Arroz</option><option>Café</option><option>Otro</option></select></div><div class="field"><label for="variable">Variable evaluada</label><input id="variable" value="Altura de planta (cm)"></div></div>
+        <div class="table-wrap"><table id="trialTable"><thead><tr><th>Tratamiento</th><th>Repetición</th><th>Valor</th><th></th></tr></thead><tbody>
+          <tr><td><input value="T0" aria-label="Tratamiento"></td><td><input type="number" value="1" min="1" aria-label="Repetición"></td><td><input type="number" value="32" step="any" aria-label="Valor"></td><td><button class="secondary remove-row" aria-label="Eliminar fila">×</button></td></tr>
+          <tr><td><input value="T0" aria-label="Tratamiento"></td><td><input type="number" value="2" min="1" aria-label="Repetición"></td><td><input type="number" value="34" step="any" aria-label="Valor"></td><td><button class="secondary remove-row" aria-label="Eliminar fila">×</button></td></tr>
+          <tr><td><input value="T1" aria-label="Tratamiento"></td><td><input type="number" value="1" min="1" aria-label="Repetición"></td><td><input type="number" value="41" step="any" aria-label="Valor"></td><td><button class="secondary remove-row" aria-label="Eliminar fila">×</button></td></tr>
+          <tr><td><input value="T1" aria-label="Tratamiento"></td><td><input type="number" value="2" min="1" aria-label="Repetición"></td><td><input type="number" value="43" step="any" aria-label="Valor"></td><td><button class="secondary remove-row" aria-label="Eliminar fila">×</button></td></tr>
+          <tr><td><input value="T2" aria-label="Tratamiento"></td><td><input type="number" value="1" min="1" aria-label="Repetición"></td><td><input type="number" value="48" step="any" aria-label="Valor"></td><td><button class="secondary remove-row" aria-label="Eliminar fila">×</button></td></tr>
+          <tr><td><input value="T2" aria-label="Tratamiento"></td><td><input type="number" value="2" min="1" aria-label="Repetición"></td><td><input type="number" value="46" step="any" aria-label="Valor"></td><td><button class="secondary remove-row" aria-label="Eliminar fila">×</button></td></tr>
+        </tbody></table></div><div class="actions"><button class="secondary" id="addRow">+ Agregar observación</button><button class="primary" id="analyzeTrial">Calcular promedios</button></div>
+      </div>
+      <div class="card span-12"><h3>Resumen por tratamiento</h3><p class="card-intro" id="trialCaption">Promedio de la variable registrada.</p><div id="trialResults" class="hint">Presiona “Calcular promedios” para generar el resumen.</div><div class="note">Este módulo calcula estadística descriptiva (n y promedio). No realiza ANOVA ni comparación de medias. Para inferir diferencias entre tratamientos se debe definir el diseño experimental, validar supuestos y realizar el análisis estadístico correspondiente.</div></div></div>
+    </section>
+
+    <section id="sanidad" class="panel hidden">
+      <div class="section-head"><div><div class="eyebrow">Módulo 05</div><h2>Sanidad vegetal</h2><p class="sub">Consulta problemas fitosanitarios frecuentes por cultivo y documenta lo que observas en campo.</p></div><span class="pill">Plagas · Enfermedades</span></div>
+      <div class="grid">
+        <div class="card span-4"><h3>Selecciona un cultivo</h3><p class="card-intro">Elige el cultivo para consultar ejemplos de plagas y enfermedades que pueden afectarlo.</p><div class="field"><label for="healthCrop">Cultivo</label><select id="healthCrop"><option value="tomate">Tomate</option><option value="arroz">Arroz</option><option value="maiz">Maíz</option><option value="cafe">Café</option><option value="frijol">Fríjol</option><option value="fresa">Fresa</option><option value="platano">Plátano</option><option value="melon">Melón</option></select></div><div class="note">La lista es una guía inicial de problemas frecuentes; su presencia depende de la zona, clima, variedad y etapa del cultivo.</div></div>
+        <div class="card span-8"><h3>Plagas y enfermedades asociadas</h3><p class="card-intro">Ejemplos para orientar la observación. Revisa los síntomas y confirma la causa antes de tomar decisiones de manejo.</p><div class="grid" style="gap:12px"><div class="card span-6" style="padding:15px;background:var(--surface-soft)"><h3>🪲 Plagas</h3><div id="pestList" class="results" style="margin-top:12px"></div></div><div class="card span-6" style="padding:15px;background:var(--surface-soft)"><h3>🍃 Enfermedades</h3><div id="diseaseList" class="results" style="margin-top:12px"></div></div></div></div>
+        <div class="card span-12"><h3>Registro fotográfico de campo</h3><p class="card-intro">Sube una fotografía de la planta, hojas, tallos, frutos o del insecto observado. Puedes añadir tus notas para revisarlas después.</p><div class="fields"><div class="field"><label for="fieldPhoto">Fotografía</label><input id="fieldPhoto" type="file" accept="image/*"><span class="hint">Formatos de imagen compatibles con tu dispositivo.</span></div><div class="field"><label for="photoPart">Parte de la planta observada</label><select id="photoPart"><option>Hoja</option><option>Tallo</option><option>Raíz</option><option>Flor</option><option>Fruto</option><option>Planta completa</option><option>Insecto u organismo</option></select></div><div class="field full"><label for="fieldNotes">Síntomas u observaciones</label><input id="fieldNotes" type="text" placeholder="Ej. manchas circulares, amarillamiento, perforaciones..." /></div></div><div class="grid" style="margin-top:14px"><div class="card span-4" style="padding:10px"><img id="photoPreview" alt="Vista previa de la fotografía seleccionada" class="hidden" style="width:100%;max-height:260px;object-fit:contain;border-radius:10px"><div id="photoPlaceholder" class="hint" style="padding:28px 8px;text-align:center">Aquí aparecerá la vista previa de tu fotografía.</div></div><div class="card span-8"><h3>¿Qué puedes hacer con este registro?</h3><p class="card-intro">Por ahora puedes visualizar la imagen y organizar tus observaciones en esta sesión. En la siguiente etapa conectaremos el módulo al almacenamiento para conservar las fotografías y notas en tu cuenta.</p><div class="notice">La fotografía no confirma por sí sola una plaga o enfermedad. Una imagen puede mostrar síntomas similares entre distintas causas; utiliza esta sección como apoyo de observación y solicita confirmación técnica antes de aplicar tratamientos.</div></div></div></div>
+      </div>
+    </section>
+
+    <section id="costos" class="panel hidden">
+      <div class="section-head"><div><div class="eyebrow">Módulo 05</div><h2>Costos de producción</h2><p class="sub">Estima costos totales, ingresos y margen bruto con los datos de tu cultivo.</p></div><span class="pill">Presupuesto básico</span></div>
+      <div class="grid"><div class="card span-8"><h3>Presupuesto del cultivo</h3><p class="card-intro">Ingresa los costos totales del área evaluada y el ingreso esperado.</p><div class="fields">
+        <div class="field"><label for="costArea">Área (ha)</label><input id="costArea" type="number" min="0" step="any" value="1"></div>
+        <div class="field"><label for="seedCost">Semillas / material vegetal (COP)</label><input id="seedCost" type="number" min="0" value="450000"></div>
+        <div class="field"><label for="fertCost">Fertilizantes (COP)</label><input id="fertCost" type="number" min="0" value="650000"></div>
+        <div class="field"><label for="pestCost">Manejo fitosanitario (COP)</label><input id="pestCost" type="number" min="0" value="300000"></div>
+        <div class="field"><label for="laborCost">Mano de obra (COP)</label><input id="laborCost" type="number" min="0" value="900000"></div>
+        <div class="field"><label for="otherCost">Otros costos (COP)</label><input id="otherCost" type="number" min="0" value="200000"></div>
+        <div class="field"><label for="revenue">Ingresos estimados (COP)</label><input id="revenue" type="number" min="0" value="3500000"></div>
+      </div><div class="actions"><button class="primary" id="calcCost">Calcular presupuesto</button></div></div>
+      <div class="card span-4"><h3>Resultado económico</h3><div class="metric"><small>Costo total</small><strong id="totalCost">$2.500.000</strong><span>COP</span></div><div class="metric" style="margin-top:9px"><small>Margen bruto estimado</small><strong id="margin">$1.000.000</strong><span>COP</span></div><div class="metric" style="margin-top:9px"><small>Costo por hectárea</small><strong id="costPerHa">$2.500.000</strong><span>COP/ha</span></div><p class="hint" style="margin-top:10px">No incluye costos financieros, depreciación, impuestos ni otros rubros no registrados.</p></div></div>
+    </section>
+    <footer>AgroCalculadora · Prototipo educativo. Los datos ingresados se procesan en esta página y no se guardan en una base de datos.<br>Verifica siempre las recomendaciones agronómicas con fuentes técnicas y normativa vigente.</footer>
+  </main>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const num = id => Number($(id).value);
+const fmt = (n, digits=2) => Number(n).toLocaleString('es-CO',{minimumFractionDigits:digits,maximumFractionDigits:digits});
+function showTab(id){document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('hidden',p.id!==id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));window.scrollTo({top:0,behavior:'smooth'});}
+document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.go)));
+const healthData={
+  tomate:{pests:['Polilla del tomate (Tuta absoluta)','Mosca blanca (Bemisia tabaci)','Trips (Frankliniella spp.)'],diseases:['Tizón tardío (Phytophthora infestans)','Tizón temprano (Alternaria solani)','Marchitez bacteriana (Ralstonia solanacearum)']},
+  arroz:{pests:['Sogata (Tagosodes orizicolus)','Barrenadores del tallo (Diatraea spp.)','Chinches del arroz (Oebalus spp.)'],diseases:['Piricularia o añublo (Magnaporthe oryzae)','Añublo de la vaina (Rhizoctonia solani)','Manchado del grano (complejo de hongos)']},
+  maiz:{pests:['Gusano cogollero (Spodoptera frugiperda)','Barrenador del tallo (Diatraea spp.)','Chicharrita del maíz (Dalbulus maidis)'],diseases:['Mancha gris (Cercospora spp.)','Tizón foliar (Exserohilum turcicum)','Carbón común (Ustilago maydis)']},
+  cafe:{pests:['Broca del café (Hypothenemus hampei)','Minador de la hoja (Leucoptera coffeella)','Cochinillas (Coccoidea)'],diseases:['Roya del café (Hemileia vastatrix)','Ojo de gallo (Mycena citricolor)','Mal rosado (Erythricium salmonicolor)']},
+  frijol:{pests:['Mosca blanca (Bemisia tabaci)','Lorito verde (Empoasca spp.)','Babosas (Deroceras spp.)'],diseases:['Antracnosis (Colletotrichum lindemuthianum)','Roya (Uromyces appendiculatus)','Mancha angular (Pseudocercospora griseola)']},
+  fresa:{pests:['Ácaros (Tetranychus urticae)','Trips (Frankliniella occidentalis)','Pulgones (Aphididae)'],diseases:['Moho gris (Botrytis cinerea)','Oídio (Podosphaera aphanis)','Antracnosis (Colletotrichum spp.)']},
+  platano:{pests:['Picudo negro (Cosmopolites sordidus)','Trips (Frankliniella spp.)','Nematodos fitoparásitos'],diseases:['Sigatoka negra (Pseudocercospora fijiensis)','Moko (Ralstonia solanacearum)','Pudriciones de rizoma (complejo de patógenos)']},
+  melon:{pests:['Mosca blanca (Bemisia tabaci)','Pulgones (Aphis gossypii)','Barrenador del fruto (Diaphania spp.)'],diseases:['Mildiu velloso (Pseudoperonospora cubensis)','Oídio (Podosphaera xanthii)','Marchitez por Fusarium (Fusarium oxysporum)']}
+};
+function renderHealthList(){let d=healthData[$('healthCrop').value];$('pestList').innerHTML=d.pests.map(x=>'<div>• '+x+'</div>').join('');$('diseaseList').innerHTML=d.diseases.map(x=>'<div>• '+x+'</div>').join('');}
+$('healthCrop').addEventListener('change',renderHealthList);renderHealthList();
+$('fieldPhoto').addEventListener('change',e=>{let file=e.target.files&&e.target.files[0];if(!file)return;if(!file.type.startsWith('image/'))return;let reader=new FileReader();reader.onload=()=>{$('photoPreview').src=reader.result;$('photoPreview').classList.remove('hidden');$('photoPlaceholder').classList.add('hidden');};reader.readAsDataURL(file);});
+function calcAgro(){let dose=num('doseAgro'),area=num('areaAgro'),water=num('waterAgro'),tank=num('tankAgro'),unit=$('unitAgro').value;let err=$('agroError');if([dose,area,water,tank].some(v=>!Number.isFinite(v)||v<=0)){err.textContent='Ingresa valores mayores que cero en todos los campos.';return;}err.textContent='';let total=dose*area,waterTotal=water*area,tanks=waterTotal/tank,base=unit==='L'||unit==='kg'?total*1000:total,per=base/tanks,perUnit=(unit==='L'||unit==='mL')?'mL':'g';$('agroTotal').textContent=fmt(total,3);$('agroUnit').textContent=unit;$('agroWater').textContent=fmt(waterTotal,1);$('agroTanks').textContent=fmt(tanks,1);$('agroPerTank').textContent=fmt(per,2);$('agroPerUnit').textContent=perUnit;}
+$('calcAgro').addEventListener('click',calcAgro);$('resetAgro').addEventListener('click',()=>{ $('doseAgro').value=1;$('unitAgro').value='L';$('areaAgro').value=3;$('waterAgro').value=200;$('tankAgro').value=20;calcAgro();});
+function calcFert(){let need=num('needFert'),grade=num('gradeFert'),area=num('areaFert');if(need<0||grade<=0||grade>100||area<=0){$('fertError').textContent='Verifica: requerimiento ≥ 0, concentración entre 0 y 100 y área > 0.';return;}$('fertError').textContent='';let per=need/(grade/100);$('fertHa').textContent=fmt(per,2);$('fertTotal').textContent=fmt(per*area,2);}
+$('calcFert').addEventListener('click',calcFert);
+function calcPlant(){let row=num('rowDist'),plant=num('plantDist'),sites=num('rows'),area=num('areaPlant');if(row<=0||plant<=0||sites<=0||area<=0){$('plantError').textContent='Todas las distancias, plantas por sitio y área deben ser mayores que cero.';return;}$('plantError').textContent='';let density=10000/(row*plant)*sites;$('density').textContent=fmt(density,0);$('population').textContent=fmt(density*area,0);}
+$('calcPlant').addEventListener('click',calcPlant);
+function bindRemove(){document.querySelectorAll('.remove-row').forEach(b=>b.onclick=()=>b.closest('tr').remove());}
+$('addRow').addEventListener('click',()=>{let tr=document.createElement('tr');tr.innerHTML='<td><input value="T0" aria-label="Tratamiento"></td><td><input type="number" min="1" value="1" aria-label="Repetición"></td><td><input type="number" step="any" value="0" aria-label="Valor"></td><td><button class="secondary remove-row" aria-label="Eliminar fila">×</button></td>';$('trialTable').querySelector('tbody').appendChild(tr);bindRemove();});
+$('analyzeTrial').addEventListener('click',()=>{let rows=[...$('trialTable').querySelectorAll('tbody tr')],data={};rows.forEach(r=>{let cells=r.querySelectorAll('input'),t=cells[0].value.trim()||'Sin nombre',v=Number(cells[2].value);if(cells[2].value!==''&&Number.isFinite(v)){(data[t]??=[]).push(v);}});let keys=Object.keys(data);if(!keys.length){$('trialResults').textContent='Agrega al menos un valor numérico.';return;}let html='<div class="table-wrap"><table><thead><tr><th>Tratamiento</th><th>Observaciones (n)</th><th>Promedio</th><th>Mínimo</th><th>Máximo</th></tr></thead><tbody>';keys.sort().forEach(k=>{let a=data[k],mean=a.reduce((x,y)=>x+y,0)/a.length;html+=`<tr><td><b>${k.replace(/[&<>"']/g,'')}</b></td><td>${a.length}</td><td>${fmt(mean,2)}</td><td>${fmt(Math.min(...a),2)}</td><td>${fmt(Math.max(...a),2)}</td></tr>`;});html+='</tbody></table></div>';$('trialResults').innerHTML=html;$('trialCaption').textContent=$('variable').value+' · '+$('trialCrop').value;});bindRemove();
+function calcCost(){let ids=['seedCost','fertCost','pestCost','laborCost','otherCost'];let total=ids.reduce((s,id)=>s+Math.max(0,num(id)||0),0),rev=Math.max(0,num('revenue')||0),area=num('costArea');if(area<=0){return;}let money=n=>'$'+Math.round(n).toLocaleString('es-CO');$('totalCost').textContent=money(total);$('margin').textContent=money(rev-total);$('costPerHa').textContent=money(total/area);}
+$('calcCost').addEventListener('click',calcCost);
+calcAgro();calcFert();calcPlant();calcCost();
+</script>
+</body>
+</html>
