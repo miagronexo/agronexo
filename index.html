@@ -212,17 +212,369 @@ const fmt = (n, digits=2) => Number(n).toLocaleString('es-CO',{minimumFractionDi
 function showTab(id){document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('hidden',p.id!==id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));window.scrollTo({top:0,behavior:'smooth'});}
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.go)));
-const healthData={
-  tomate:{pests:['Polilla del tomate (Tuta absoluta)','Mosca blanca (Bemisia tabaci)','Trips (Frankliniella spp.)'],diseases:['Tizón tardío (Phytophthora infestans)','Tizón temprano (Alternaria solani)','Marchitez bacteriana (Ralstonia solanacearum)']},
-  arroz:{pests:['Sogata (Tagosodes orizicolus)','Barrenadores del tallo (Diatraea spp.)','Chinches del arroz (Oebalus spp.)'],diseases:['Piricularia o añublo (Magnaporthe oryzae)','Añublo de la vaina (Rhizoctonia solani)','Manchado del grano (complejo de hongos)']},
-  maiz:{pests:['Gusano cogollero (Spodoptera frugiperda)','Barrenador del tallo (Diatraea spp.)','Chicharrita del maíz (Dalbulus maidis)'],diseases:['Mancha gris (Cercospora spp.)','Tizón foliar (Exserohilum turcicum)','Carbón común (Ustilago maydis)']},
-  cafe:{pests:['Broca del café (Hypothenemus hampei)','Minador de la hoja (Leucoptera coffeella)','Cochinillas (Coccoidea)'],diseases:['Roya del café (Hemileia vastatrix)','Ojo de gallo (Mycena citricolor)','Mal rosado (Erythricium salmonicolor)']},
-  frijol:{pests:['Mosca blanca (Bemisia tabaci)','Lorito verde (Empoasca spp.)','Babosas (Deroceras spp.)'],diseases:['Antracnosis (Colletotrichum lindemuthianum)','Roya (Uromyces appendiculatus)','Mancha angular (Pseudocercospora griseola)']},
-  fresa:{pests:['Ácaros (Tetranychus urticae)','Trips (Frankliniella occidentalis)','Pulgones (Aphididae)'],diseases:['Moho gris (Botrytis cinerea)','Oídio (Podosphaera aphanis)','Antracnosis (Colletotrichum spp.)']},
-  platano:{pests:['Picudo negro (Cosmopolites sordidus)','Trips (Frankliniella spp.)','Nematodos fitoparásitos'],diseases:['Sigatoka negra (Pseudocercospora fijiensis)','Moko (Ralstonia solanacearum)','Pudriciones de rizoma (complejo de patógenos)']},
-  melon:{pests:['Mosca blanca (Bemisia tabaci)','Pulgones (Aphis gossypii)','Barrenador del fruto (Diaphania spp.)'],diseases:['Mildiu velloso (Pseudoperonospora cubensis)','Oídio (Podosphaera xanthii)','Marchitez por Fusarium (Fusarium oxysporum)']}
+
+const healthData = {
+  tomate: {
+    pests: [
+      {
+        name: 'Polilla del tomate',
+        scientific: 'Tuta absoluta',
+        symptoms: 'Galerías en las hojas, tallos y frutos; perforaciones en los tomates.',
+        management: 'Monitoreo frecuente, eliminación de frutos afectados, trampas con feromonas y control biológico.'
+      },
+      {
+        name: 'Mosca blanca',
+        scientific: 'Bemisia tabaci',
+        symptoms: 'Amarillamiento, debilitamiento y presencia de insectos pequeños en el envés de las hojas.',
+        management: 'Monitoreo, control de malezas hospederas y conservación de enemigos naturales.'
+      },
+      {
+        name: 'Trips',
+        scientific: 'Frankliniella spp.',
+        symptoms: 'Raspaduras plateadas, deformación de hojas y daños en flores y frutos.',
+        management: 'Monitoreo con trampas adhesivas, manejo de malezas y control biológico.'
+      }
+    ],
+    diseases: [
+      {
+        name: 'Tizón tardío',
+        scientific: 'Phytophthora infestans',
+        symptoms: 'Manchas oscuras y húmedas en hojas y tallos; puede afectar los frutos.',
+        management: 'Mejorar ventilación, evitar exceso de humedad y retirar tejidos afectados.'
+      },
+      {
+        name: 'Tizón temprano',
+        scientific: 'Alternaria solani',
+        symptoms: 'Manchas marrones con anillos concéntricos, principalmente en hojas inferiores.',
+        management: 'Rotación de cultivos, eliminación de residuos y evitar mojar el follaje.'
+      },
+      {
+        name: 'Marchitez bacteriana',
+        scientific: 'Ralstonia solanacearum',
+        symptoms: 'Marchitez progresiva y oscurecimiento de tejidos vasculares.',
+        management: 'Usar material vegetal sano, mejorar drenaje y retirar plantas enfermas.'
+      }
+    ]
+  },
+
+  arroz: {
+    pests: [
+      {
+        name: 'Sogata',
+        scientific: 'Tagosodes orizicolus',
+        symptoms: 'Amarillamiento, debilitamiento y transmisión del virus de la hoja blanca.',
+        management: 'Monitoreo, manejo de residuos y variedades resistentes cuando estén disponibles.'
+      },
+      {
+        name: 'Barrenadores del tallo',
+        scientific: 'Diatraea spp.',
+        symptoms: 'Perforaciones en tallos y presencia de corazones muertos o panículas blancas.',
+        management: 'Monitoreo, manejo de residuos y conservación de parasitoides.'
+      },
+      {
+        name: 'Chinches del arroz',
+        scientific: 'Oebalus spp.',
+        symptoms: 'Granos chupados, manchados y parcialmente vacíos.',
+        management: 'Monitorear durante el llenado del grano y manejar malezas hospederas.'
+      }
+    ],
+    diseases: [
+      {
+        name: 'Piricularia o añublo',
+        scientific: 'Magnaporthe oryzae',
+        symptoms: 'Lesiones en forma de diamante en hojas y daños en el cuello de la panícula.',
+        management: 'Utilizar variedades resistentes y evitar exceso de nitrógeno.'
+      },
+      {
+        name: 'Añublo de la vaina',
+        scientific: 'Rhizoctonia solani',
+        symptoms: 'Lesiones ovaladas en las vainas que pueden avanzar hacia las hojas.',
+        management: 'Densidad de siembra adecuada y manejo equilibrado de fertilización.'
+      },
+      {
+        name: 'Manchado del grano',
+        scientific: 'Complejo de hongos',
+        symptoms: 'Manchas oscuras y decoloración en las glumas y granos.',
+        management: 'Usar semilla sana y manejar adecuadamente la nutrición y humedad.'
+      }
+    ]
+  },
+
+  maiz: {
+    pests: [
+      {
+        name: 'Gusano cogollero',
+        scientific: 'Spodoptera frugiperda',
+        symptoms: 'Perforaciones, raspaduras y abundante excremento en el cogollo.',
+        management: 'Monitoreo temprano, control biológico y manejo integrado.'
+      },
+      {
+        name: 'Barrenador del tallo',
+        scientific: 'Diatraea spp.',
+        symptoms: 'Galerías internas, debilitamiento y quebradura de tallos.',
+        management: 'Manejo de residuos y conservación de enemigos naturales.'
+      },
+      {
+        name: 'Chicharrita del maíz',
+        scientific: 'Dalbulus maidis',
+        symptoms: 'Amarillamiento, enanismo y transmisión de enfermedades del achaparramiento.',
+        management: 'Monitorear poblaciones y manejar plantas voluntarias y hospederas.'
+      }
+    ],
+    diseases: [
+      {
+        name: 'Mancha gris',
+        scientific: 'Cercospora spp.',
+        symptoms: 'Lesiones rectangulares y alargadas entre las nervaduras.',
+        management: 'Rotación, manejo de residuos y variedades tolerantes.'
+      },
+      {
+        name: 'Tizón foliar',
+        scientific: 'Exserohilum turcicum',
+        symptoms: 'Lesiones alargadas de color café o grisáceo en las hojas.',
+        management: 'Rotación y utilización de híbridos resistentes.'
+      },
+      {
+        name: 'Carbón común',
+        scientific: 'Ustilago maydis',
+        symptoms: 'Agallas o tumores blanquecinos que luego se oscurecen.',
+        management: 'Utilizar semilla sana y evitar lesiones en las plantas.'
+      }
+    ]
+  },
+
+  cafe: {
+    pests: [
+      {
+        name: 'Broca del café',
+        scientific: 'Hypothenemus hampei',
+        symptoms: 'Orificios de entrada y galerías en los frutos; daño al grano.',
+        management: 'Recolección oportuna de frutos maduros y repase después de cosecha.'
+      },
+      {
+        name: 'Minador de la hoja',
+        scientific: 'Leucoptera coffeella',
+        symptoms: 'Manchas o galerías claras dentro de las hojas.',
+        management: 'Monitoreo, manejo de sombra y conservación de enemigos naturales.'
+      },
+      {
+        name: 'Cochinillas',
+        scientific: 'Coccoidea',
+        symptoms: 'Colonias algodonosas, amarillamiento y debilitamiento.',
+        management: 'Monitorear focos y conservar insectos benéficos.'
+      }
+    ],
+    diseases: [
+      {
+        name: 'Roya del café',
+        scientific: 'Hemileia vastatrix',
+        symptoms: 'Manchas amarillas y polvo anaranjado en el envés de las hojas.',
+        management: 'Variedades resistentes, nutrición equilibrada y monitoreo.'
+      },
+      {
+        name: 'Ojo de gallo',
+        scientific: 'Mycena citricolor',
+        symptoms: 'Manchas circulares en hojas y lesiones en frutos.',
+        management: 'Regular la sombra, mejorar ventilación y retirar tejidos afectados.'
+      },
+      {
+        name: 'Mal rosado',
+        scientific: 'Erythricium salmonicolor',
+        symptoms: 'Costras rosadas en ramas y secamiento de tejidos.',
+        management: 'Poda de ramas afectadas y mejorar aireación del cultivo.'
+      }
+    ]
+  },
+
+  frijol: {
+    pests: [
+      {
+        name: 'Mosca blanca',
+        scientific: 'Bemisia tabaci',
+        symptoms: 'Amarillamiento, debilitamiento y transmisión de virus.',
+        management: 'Monitoreo, manejo de malezas y control biológico.'
+      },
+      {
+        name: 'Lorito verde',
+        scientific: 'Empoasca spp.',
+        symptoms: 'Amarillamiento y enrollamiento de bordes de las hojas.',
+        management: 'Monitoreo y manejo de plantas hospederas.'
+      },
+      {
+        name: 'Babosas',
+        scientific: 'Deroceras spp.',
+        symptoms: 'Perforaciones irregulares y rastros de mucosidad.',
+        management: 'Control de humedad excesiva, refugios y residuos vegetales.'
+      }
+    ],
+    diseases: [
+      {
+        name: 'Antracnosis',
+        scientific: 'Colletotrichum lindemuthianum',
+        symptoms: 'Lesiones oscuras en tallos, hojas y vainas.',
+        management: 'Semilla certificada, rotación y eliminación de residuos enfermos.'
+      },
+      {
+        name: 'Roya',
+        scientific: 'Uromyces appendiculatus',
+        symptoms: 'Pústulas de color café o rojizo en las hojas.',
+        management: 'Variedades resistentes y monitoreo del cultivo.'
+      },
+      {
+        name: 'Mancha angular',
+        scientific: 'Pseudocercospora griseola',
+        symptoms: 'Manchas angulares delimitadas por las nervaduras.',
+        management: 'Rotación, semilla sana y manejo de residuos.'
+      }
+    ]
+  },
+
+  fresa: {
+    pests: [
+      {
+        name: 'Ácaros',
+        scientific: 'Tetranychus urticae',
+        symptoms: 'Punteaduras amarillas, bronceado y telarañas finas.',
+        management: 'Monitoreo del envés y conservación de ácaros benéficos.'
+      },
+      {
+        name: 'Trips',
+        scientific: 'Frankliniella occidentalis',
+        symptoms: 'Raspaduras, bronceado y deformación de flores y frutos.',
+        management: 'Monitoreo de flores y trampas adhesivas.'
+      },
+      {
+        name: 'Pulgones',
+        scientific: 'Aphididae',
+        symptoms: 'Colonias en brotes tiernos, deformación y mielecilla.',
+        management: 'Conservar enemigos naturales y monitorear brotes.'
+      }
+    ],
+    diseases: [
+      {
+        name: 'Moho gris',
+        scientific: 'Botrytis cinerea',
+        symptoms: 'Pudrición blanda y crecimiento de moho gris en frutos.',
+        management: 'Retirar frutos afectados, mejorar ventilación y evitar humedad prolongada.'
+      },
+      {
+        name: 'Oídio',
+        scientific: 'Podosphaera aphanis',
+        symptoms: 'Polvo blanquecino en hojas y deformación del follaje.',
+        management: 'Ventilación y monitoreo frecuente.'
+      },
+      {
+        name: 'Antracnosis',
+        scientific: 'Colletotrichum spp.',
+        symptoms: 'Lesiones oscuras en frutos, pecíolos y coronas.',
+        management: 'Material vegetal sano y eliminación de tejidos afectados.'
+      }
+    ]
+  },
+
+  platano: {
+    pests: [
+      {
+        name: 'Picudo negro',
+        scientific: 'Cosmopolites sordidus',
+        symptoms: 'Galerías en el cormo, debilitamiento y volcamiento.',
+        management: 'Trampas con pseudotallo, saneamiento y material de siembra sano.'
+      },
+      {
+        name: 'Trips',
+        scientific: 'Frankliniella spp.',
+        symptoms: 'Cicatrices y manchas en la superficie de los frutos.',
+        management: 'Monitoreo de racimos y manejo de residuos florales.'
+      },
+      {
+        name: 'Nematodos fitoparásitos',
+        scientific: 'Radopholus similis y otros',
+        symptoms: 'Lesiones en raíces, reducción de absorción y volcamiento.',
+        management: 'Material de siembra sano y manejo del suelo.'
+      }
+    ],
+    diseases: [
+      {
+        name: 'Sigatoka negra',
+        scientific: 'Pseudocercospora fijiensis',
+        symptoms: 'Rayas y manchas oscuras en las hojas; reduce el área fotosintética.',
+        management: 'Deshoja sanitaria, drenaje y variedades tolerantes.'
+      },
+      {
+        name: 'Moko',
+        scientific: 'Ralstonia solanacearum',
+        symptoms: 'Marchitez, amarillamiento y oscurecimiento vascular.',
+        management: 'Desinfección de herramientas, material sano y medidas de bioseguridad.'
+      },
+      {
+        name: 'Pudrición del rizoma',
+        scientific: 'Complejo de patógenos',
+        symptoms: 'Descomposición de tejidos y debilitamiento de la planta.',
+        management: 'Mejorar drenaje y utilizar material de propagación sano.'
+      }
+    ]
+  },
+
+  melon: {
+    pests: [
+      {
+        name: 'Mosca blanca',
+        scientific: 'Bemisia tabaci',
+        symptoms: 'Amarillamiento, mielecilla y posible transmisión de virus.',
+        management: 'Monitoreo, trampas y manejo de malezas hospederas.'
+      },
+      {
+        name: 'Pulgón del melón',
+        scientific: 'Aphis gossypii',
+        symptoms: 'Colonias en brotes, hojas enrolladas y mielecilla.',
+        management: 'Conservar enemigos naturales y monitorear brotes.'
+      },
+      {
+        name: 'Barrenador del fruto',
+        scientific: 'Diaphania spp.',
+        symptoms: 'Perforaciones y galerías en hojas, flores y frutos.',
+        management: 'Monitoreo, recolección de frutos afectados y control biológico.'
+      }
+    ],
+    diseases: [
+      {
+        name: 'Mildiu velloso',
+        scientific: 'Pseudoperonospora cubensis',
+        symptoms: 'Manchas amarillas angulares y crecimiento en el envés.',
+        management: 'Ventilación, evitar humedad foliar prolongada y monitoreo.'
+      },
+      {
+        name: 'Oídio',
+        scientific: 'Podosphaera xanthii',
+        symptoms: 'Manchas blancas pulverulentas en hojas y tallos.',
+        management: 'Variedades tolerantes y ventilación adecuada.'
+      },
+      {
+        name: 'Marchitez por Fusarium',
+        scientific: 'Fusarium oxysporum',
+        symptoms: 'Amarillamiento y marchitez progresiva.',
+        management: 'Rotación, variedades resistentes y material vegetal sano.'
+      }
+    ]
+  }
 };
-function renderHealthList(){let d=healthData[$('healthCrop').value];$('pestList').innerHTML=d.pests.map(x=>'<div>• '+x+'</div>').join('');$('diseaseList').innerHTML=d.diseases.map(x=>'<div>• '+x+'</div>').join('');}
+function renderHealthList() {
+  const data = healthData[$('healthCrop').value];
+
+  function createCards(items, type) {
+    return items.map(item => `
+      <div class="card" style="padding:14px;margin-bottom:12px;background:var(--surface)">
+        <h4>${item.name}</h4>
+        <p><em>${item.scientific}</em></p>
+        <p><strong>Síntomas y daños:</strong> ${item.symptoms}</p>
+        <p><strong>Manejo agronómico:</strong> ${item.management}</p>
+      </div>
+    `).join('');
+  }
+
+  $('pestList').innerHTML = createCards(data.pests, 'pest');
+  $('diseaseList').innerHTML = createCards(data.diseases, 'disease');
+}
 $('healthCrop').addEventListener('change',renderHealthList);renderHealthList();
 $('fieldPhoto').addEventListener('change',e=>{let file=e.target.files&&e.target.files[0];if(!file)return;if(!file.type.startsWith('image/'))return;let reader=new FileReader();reader.onload=()=>{$('photoPreview').src=reader.result;$('photoPreview').classList.remove('hidden');$('photoPlaceholder').classList.add('hidden');};reader.readAsDataURL(file);});
 function calcAgro(){let dose=num('doseAgro'),area=num('areaAgro'),water=num('waterAgro'),tank=num('tankAgro'),unit=$('unitAgro').value;let err=$('agroError');if([dose,area,water,tank].some(v=>!Number.isFinite(v)||v<=0)){err.textContent='Ingresa valores mayores que cero en todos los campos.';return;}err.textContent='';let total=dose*area,waterTotal=water*area,tanks=waterTotal/tank,base=unit==='L'||unit==='kg'?total*1000:total,per=base/tanks,perUnit=(unit==='L'||unit==='mL')?'mL':'g';$('agroTotal').textContent=fmt(total,3);$('agroUnit').textContent=unit;$('agroWater').textContent=fmt(waterTotal,1);$('agroTanks').textContent=fmt(tanks,1);$('agroPerTank').textContent=fmt(per,2);$('agroPerUnit').textContent=perUnit;}
