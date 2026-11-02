@@ -588,9 +588,8 @@ function renderHealthList() {
 }
 
 
-  $('pestList').innerHTML = createCards(data.pests, 'pest');
-  $('diseaseList').innerHTML = createCards(data.diseases, 'disease');
-}
+
+
 $('healthCrop').addEventListener('change',renderHealthList);renderHealthList();
 $('fieldPhoto').addEventListener('change',e=>{let file=e.target.files&&e.target.files[0];if(!file)return;if(!file.type.startsWith('image/'))return;let reader=new FileReader();reader.onload=()=>{$('photoPreview').src=reader.result;$('photoPreview').classList.remove('hidden');$('photoPlaceholder').classList.add('hidden');};reader.readAsDataURL(file);});
 function calcAgro(){let dose=num('doseAgro'),area=num('areaAgro'),water=num('waterAgro'),tank=num('tankAgro'),unit=$('unitAgro').value;let err=$('agroError');if([dose,area,water,tank].some(v=>!Number.isFinite(v)||v<=0)){err.textContent='Ingresa valores mayores que cero en todos los campos.';return;}err.textContent='';let total=dose*area,waterTotal=water*area,tanks=waterTotal/tank,base=unit==='L'||unit==='kg'?total*1000:total,per=base/tanks,perUnit=(unit==='L'||unit==='mL')?'mL':'g';$('agroTotal').textContent=fmt(total,3);$('agroUnit').textContent=unit;$('agroWater').textContent=fmt(waterTotal,1);$('agroTanks').textContent=fmt(tanks,1);$('agroPerTank').textContent=fmt(per,2);$('agroPerUnit').textContent=perUnit;}
