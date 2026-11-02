@@ -217,11 +217,13 @@ const healthData = {
   tomate: {
     pests: [
       {
-        name: 'Polilla del tomate',
-        scientific: 'Tuta absoluta',
-        symptoms: 'Galerías en las hojas, tallos y frutos; perforaciones en los tomates.',
-        management: 'Monitoreo frecuente, eliminación de frutos afectados, trampas con feromonas y control biológico.'
-      },
+  name: 'Polilla del tomate',
+  scientific: 'Tuta absoluta',
+  symptoms: 'Galerías en las hojas, tallos y frutos; perforaciones en los tomates.',
+  management: 'Monitoreo frecuente, eliminación de frutos afectados, trampas con feromonas y control biológico.',
+  imageCause: '',
+  imageDamage: ''
+},
       {
         name: 'Mosca blanca',
         scientific: 'Bemisia tabaci',
@@ -562,32 +564,50 @@ const healthData = {
 function renderHealthList() {
   const data = healthData[$('healthCrop').value];
 
-  function createCards(items) {
-    return items.map(item => `
+
+function createCards(items) {
+  return items.map(item => {
+    const causeImage = item.imageCause || item.image || '';
+    const damageImage = item.imageDamage || '';
+
+    return `
       <div class="card" style="padding:14px;margin-bottom:15px;background:var(--surface)">
-        
-        ${item.image ? `
-          <img src="${item.image}" alt="${item.name}"
-          style="width:100%;height:220px;object-fit:cover;border-radius:10px;margin-bottom:12px">
-        ` : `
-          <div style="width:100%;height:160px;border-radius:10px;background:var(--background);display:flex;align-items:center;justify-content:center;margin-bottom:12px">
-            <span>Imagen próximamente</span>
-          </div>
-        `}
 
         <h4>${item.name}</h4>
         <p><em>${item.scientific}</em></p>
+
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px">
+
+          <div>
+            <p><strong>Organismo o agente causal</strong></p>
+            ${causeImage ? `
+              <img src="${causeImage}" alt="${item.name}" style="width:100%;height:150px;object-fit:cover;border-radius:10px">
+            ` : `
+              <div style="height:150px;display:flex;align-items:center;justify-content:center;background:var(--background);border-radius:10px;text-align:center;padding:8px">
+                Imagen próximamente
+              </div>
+            `}
+          </div>
+
+          <div>
+            <p><strong>Daño visual</strong></p>
+            ${damageImage ? `
+              <img src="${damageImage}" alt="Daño de ${item.name}" style="width:100%;height:150px;object-fit:cover;border-radius:10px">
+            ` : `
+              <div style="height:150px;display:flex;align-items:center;justify-content:center;background:var(--background);border-radius:10px;text-align:center;padding:8px">
+                Imagen próximamente
+              </div>
+            `}
+          </div>
+
+        </div>
+
         <p><strong>Síntomas y daños:</strong> ${item.symptoms}</p>
         <p><strong>Manejo agronómico:</strong> ${item.management}</p>
       </div>
-    `).join('');
-  }
-
-
-
-
-
-
+    `;
+  }).join('');
+}
 
  $('pestList').innerHTML = createCards(data.pests);
   $('diseaseList').innerHTML = createCards(data.diseases);
