@@ -332,44 +332,58 @@ const healthData = {
 
   maiz: {
     pests: [
+  {
+    name: 'Gusano cogollero',
+    scientific: 'Spodoptera frugiperda',
+    symptoms: 'Las larvas se alimentan de las hojas jóvenes y del cogollo del maíz. Inicialmente producen raspaduras y pequeñas áreas transparentes conocidas como ventanas. A medida que crecen, ocasionan perforaciones irregulares, hojas desgarradas y acumulación de excrementos dentro del cogollo. En ataques severos pueden afectar el punto de crecimiento y las mazorcas.',
+    management: 'Realizar monitoreos frecuentes desde las primeras etapas del cultivo, revisar el cogollo para detectar larvas pequeñas y daños recientes, conservar los enemigos naturales y utilizar variedades tolerantes cuando estén disponibles. Aplicar medidas de control biológico y considerar productos registrados únicamente cuando el monitoreo justifique la intervención.',
+    imageCause: 'https://entomology.k-state.edu/extension/images/corn/FAWlarva.jpeg',
+    imageDamage: 'https://www.ent.iastate.edu/images/plantpath/corn/farmyw/3936.73farmyworminj.jpg'
+},
+      
       {
-        name: 'Gusano cogollero',
-        scientific: 'Spodoptera frugiperda',
-        symptoms: 'Perforaciones, raspaduras y abundante excremento en el cogollo.',
-        management: 'Monitoreo temprano, control biológico y manejo integrado.'
-      },
+    name: 'Barrenador del tallo',
+    scientific: 'Diatraea spp.',
+    symptoms: 'Las larvas inicialmente se alimentan de los tejidos de las hojas y posteriormente perforan el tallo, formando galerías en su interior. Estos daños debilitan la planta, afectan el transporte de agua y nutrientes y pueden ocasionar quebrado de tallos y mazorcas, además de pérdidas en el rendimiento.',
+    management: 'Realizar monitoreos periódicos para identificar posturas de huevos y larvas pequeñas. Revisar especialmente el envés de las hojas del tercio medio de la planta. Conservar los enemigos naturales, manejar adecuadamente los residuos de cosecha y realizar controles oportunos antes de que las larvas penetren en el tallo.',
+    imageCause: 'https://croplifela.org/images/ES/Plaga_del_Mes/Barrenador_Tallo/Barrenador_Tallo_2.png',
+    imageDamage: 'https://07fad4ec6c.cbaul-cdnwnd.com/1b08d5266686ba073128ebb5c70654ba/200000041-ef10cf009b/8.-dano-da-broca-da-cana-em-milho-orificio-no-colmo-small.jpg'
+},
       {
-        name: 'Barrenador del tallo',
-        scientific: 'Diatraea spp.',
-        symptoms: 'Galerías internas, debilitamiento y quebradura de tallos.',
-        management: 'Manejo de residuos y conservación de enemigos naturales.'
-      },
-      {
-        name: 'Chicharrita del maíz',
-        scientific: 'Dalbulus maidis',
-        symptoms: 'Amarillamiento, enanismo y transmisión de enfermedades del achaparramiento.',
-        management: 'Monitorear poblaciones y manejar plantas voluntarias y hospederas.'
-      }
+    name: 'Chicharrita del maíz',
+    scientific: 'Dalbulus maidis',
+    symptoms: 'Las ninfas y los adultos succionan la savia en la base de las hojas y dentro del cogollo. Cuando las poblaciones son elevadas, pueden ocasionar decoloración y deformación de las hojas, retraso en el crecimiento y presencia de fumagina asociada a la melaza. Además, transmite los agentes causales del complejo de achaparramiento del maíz, que pueden provocar estrías cloróticas, enrojecimiento de las hojas, acortamiento de entrenudos, plantas pequeñas y mazorcas deformes o con pocos granos.',
+    management: 'Realizar monitoreos frecuentes desde la emergencia del cultivo, revisando especialmente los cogollos y el envés de las hojas. Eliminar plantas de maíz voluntarias que puedan servir como reservorio del insecto y de los patógenos, evitar siembras escalonadas cuando sea posible, utilizar híbridos tolerantes y conservar los enemigos naturales. Considerar controles únicamente según el monitoreo y las recomendaciones técnicas locales.',
+    imageCause: 'https://ipm.ucanr.edu/PMG/IMAGES/D/I-HO-DMAI-AD.002.jpg',
+    imageDamage: 'https://ipm.ucanr.edu/PMG/IMAGES/D/I-HO-DMAI-CO.001.jpg'
+},
     ],
     diseases: [
       {
-        name: 'Mancha gris',
-        scientific: 'Cercospora spp.',
-        symptoms: 'Lesiones rectangulares y alargadas entre las nervaduras.',
-        management: 'Rotación, manejo de residuos y variedades tolerantes.'
-      },
+    name: 'Mancha gris',
+    scientific: 'Cercospora zeae-maydis',
+    symptoms: 'La enfermedad comienza con pequeñas manchas necróticas que presentan halos amarillentos. Posteriormente, las lesiones se alargan y forman áreas rectangulares de color grisáceo o marrón, delimitadas por las nervaduras de las hojas. En ataques severos, las lesiones pueden unirse y provocar el secamiento del tejido foliar, afectando la fotosíntesis y el llenado de los granos.',
+    management: 'Utilizar híbridos resistentes o tolerantes, realizar rotación de cultivos y manejar adecuadamente los residuos vegetales infectados para reducir la supervivencia del hongo. Evitar el monocultivo continuo de maíz y realizar monitoreos periódicos, especialmente durante períodos de alta humedad. Considerar el uso de fungicidas únicamente cuando la incidencia de la enfermedad y las condiciones del cultivo lo justifiquen.',
+    imageCause: 'https://www.pioneer.com/content/dam/dpagco/pioneer/la/ar/es/images/3.1.7-1.png',
+    imageDamage: 'https://www.pioneer.com/content/dam/dpagco/pioneer/la/ar/es/images/3.1.7-4.png'
+},
+      
       {
-        name: 'Tizón foliar',
-        scientific: 'Exserohilum turcicum',
-        symptoms: 'Lesiones alargadas de color café o grisáceo en las hojas.',
-        management: 'Rotación y utilización de híbridos resistentes.'
-      },
+    name: 'Tizón foliar',
+    scientific: 'Exserohilum turcicum',
+    symptoms: 'La enfermedad inicia con pequeñas manchas ovaladas y acuosas en las hojas, que posteriormente se convierten en lesiones alargadas de color gris ceniza o verde grisáceo, con forma de cigarro. Aparecen primero en las hojas inferiores y avanzan hacia las superiores. Cuando la infección es severa, las lesiones se unen y provocan el secamiento prematuro del follaje, reduciendo la fotosíntesis y afectando el rendimiento.',
+    management: 'Utilizar híbridos resistentes o tolerantes, realizar rotación de cultivos y manejar los residuos de cosecha para disminuir las fuentes de infección. Monitorear periódicamente las hojas inferiores y las condiciones de humedad del cultivo. Cuando la enfermedad lo justifique, considerar la aplicación de fungicidas de acuerdo con la evaluación técnica y las recomendaciones para el cultivo.',
+    imageCause: 'https://agcrops.osu.edu/sites/agcrops/files/newsletter_article/image/2015-19.jpg',
+    imageDamage: 'https://bugwoodcloud.org/images/768x512/5573797.jpg'
+},
       {
-        name: 'Carbón común',
-        scientific: 'Ustilago maydis',
-        symptoms: 'Agallas o tumores blanquecinos que luego se oscurecen.',
-        management: 'Utilizar semilla sana y evitar lesiones en las plantas.'
-      }
+    name: 'Carbón común',
+    scientific: 'Ustilago maydis',
+    symptoms: 'La enfermedad se caracteriza por la formación de agallas o abultamientos en diferentes partes de la planta, principalmente en las mazorcas, aunque también pueden aparecer en tallos, hojas y espigas. Inicialmente, estas estructuras son blanquecinas, blandas y carnosas; a medida que maduran, su interior se oscurece y se llena de un polvo negro formado por esporas del hongo. Finalmente, las agallas se rompen y liberan las esporas.',
+    management: 'Utilizar híbridos resistentes o tolerantes, realizar rotación de cultivos y evitar heridas en las plantas durante las labores agrícolas. Mantener una fertilización equilibrada, evitando excesos de nitrógeno. En cultivos pequeños, retirar y destruir las agallas antes de que liberen las esporas.',
+    imageCause: 'https://www.udel.edu/academics/colleges/canr/cooperative-extension/fact-sheets/corn-smut/_jcr_content/par_udel/panelforpages/par_1/columngenerator/par_1/columngenerator/par_0/image.coreimg.jpeg/1686674367444/corn-smut-fig1.jpeg',
+    imageDamage: 'https://www.udel.edu/academics/colleges/canr/cooperative-extension/fact-sheets/corn-smut/_jcr_content/par_udel/panelforpages/par_1/columngenerator/par_1/columngenerator/par_1/image.coreimg.jpeg/1686674372861/corn-smut-fig2.jpeg'
+},
     ]
   },
 
